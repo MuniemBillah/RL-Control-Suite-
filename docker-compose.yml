@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Development environment
+  dev:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - ~/.cache/pip:/root/.cache/pip
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+  
+  # Production environment
+  prod:
+    build:
+      context: .
+      target: production
+    environment:
+      - PYTHONUNBUFFERED=1
+  
+  # Testing environment
+  test:
+    build:
+      context: .
+      target: testing
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+  
+  # Jupyter notebook server
+  jupyter:
+    build:
+      context: .
+      target: development
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+    environment:
+      - PYTHONUNBUFFERED=1
+  
+  # TensorBoard server
+  tensorboard:
+    build:
+      context: .
+      target: development
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./logs:/app/logs
+      - ./runs:/app/runs
+    command: tensorboard --logdir=/app --host=0.0.0.0 --port=6006
