@@ -1,8 +1,5 @@
 """Basic training example with PPO on CartPole."""
 
-import sys
-sys.path.insert(0, '/home/claude/rl-control-suite/src')
-
 from rl_control.algorithms import PPO
 from rl_control.envs import make_env
 from rl_control.utils import Logger
